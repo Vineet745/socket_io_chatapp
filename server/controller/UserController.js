@@ -72,7 +72,7 @@ module.exports = {
       if(!validateEmail){
         res.send({ status: "failed", message: "email and password does not match 🙁🙁😥" });
       }else{
-        res.status(200).send({ status: "success", message: "LOGIN SUCCESSFULLY"});
+        res.status(200).send({ status: "success", message: "LOGIN SUCCESSFULLY",validateEmail});
       }
     } catch (error) {
       console.log("error", error);

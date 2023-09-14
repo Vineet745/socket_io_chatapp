@@ -4,7 +4,6 @@ import {useNavigation} from '@react-navigation/native';
 import { useDispatch, useSelector } from 'react-redux';
 import DialogScreen from '../Dialog';
 import axios from 'axios';
-import { getUser } from '../redux/slice/userSlice';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const Home = () => {
   const [filteredUser, setAllfilteredUser] = useState([]);

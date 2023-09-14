@@ -41,39 +41,44 @@ app.use("/api", authRoutes);
 
 // Connection
 
-let activeUsers = [];
+let activeUsers = []
 
-io.on("connection", (socket) => {
-  console.log("connected....");
+io.on("connection",  (socket)=> {
+  console.log("connected....")
 
-  // add new User
-  socket.on("new-user-add", (newUserId) => {
-    if (!activeUsers.some((user) => user.userId === newUserId)) {
-      activeUsers.push({
-        userId: newUserId,
-        socketId: socket.id,
-      });
-      console.log("New user Connected", activeUsers);
-    }
-    io.emit("get-users", activeUsers);
-  });
+// add new User
+socket.on('new-user-add',(newUserId)=>{
+  console.log("newUserId",newUserId)
+  if(!activeUsers.some((user)=>user.userId === newUserId)){
+    activeUsers.push({
+      userId:newUserId,
+      socketId:socket.id
+    })
+    console.log("New user Connected",activeUsers)
+    
+  }
+io.emit('get-users',activeUsers)
+})
 
-  socket.on("disconnect", () => {
-    activeUsers = activeUsers.filter((user) => user.socketId !== socket.id);
-    console.log("User Disconnected", activeUsers);
-    io.emit("get-users", activeUsers);
-  });
+socket.on("disconnect",()=>{
+  activeUsers = activeUsers.filter((user)=>user.socketId !== socket.id)
+  console.log("User Disconnected")
+  io.emit('get-users',activeUsers)
+})
 
-  socket.on("send-message", (data) => {
-    console.log("data", data);
-    const { receiverId } = data;
-    const user = activeUsers.find((user) => user.userId === receiverId);
-    console.log("Sending from socket to :", receiverId);
-    console.log("Data: ", data);
-    if (user) {
-      io.to(user.socketId).emit("receive-message", data); 
-    }
-  });
+
+  
+socket.on("send-message", (data) => {
+  console.log("data",data)
+  const { receiverId } = data;
+  const user = activeUsers.find((user) => user.userId === receiverId);
+  console.log("Sending from socket to :", receiverId)
+  console.log("Data: ", data)
+  if (user) {
+    io.to(user.socketId).emit("receive-message", data);
+  }
+});
+
 });
 
 // User
