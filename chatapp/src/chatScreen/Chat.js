@@ -16,9 +16,9 @@ const Chat = ({route, roomId}) => {
     params: {item},
   } = route;
   const dispatch = useDispatch();
-  const socket = io('http://192.168.35.203:3000');
+  // const socket = io('http://192.168.35.203:3000');
 
-  // const socket = io('https://chat-application-vineet.onrender.com');
+  const socket = io('https://chat-application-vineet.onrender.com');
 
   useEffect(() => {
     getToken()
@@ -32,8 +32,6 @@ const Chat = ({route, roomId}) => {
  
   
  
-  
-
   useEffect(() => {
     socket.emit('new-user-add', user._id);
     socket.on('get-users', users => {
@@ -41,6 +39,8 @@ const Chat = ({route, roomId}) => {
     });
   }, [asyncId]);
   
+
+
 
   useEffect(() => {
     console.log("hello");
@@ -56,6 +56,8 @@ const Chat = ({route, roomId}) => {
       socket.off('new_message', messageHandler);
     };
   }, []);
+
+
 
   const sendMessage = () => {
     const myMessage = {
