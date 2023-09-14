@@ -6,6 +6,7 @@ import {Image, TouchableOpacity, Text} from 'react-native';
 import React from 'react';
 import DialogScreen from '../Dialog';
 import Register from '../register/Register';
+import Login from '../login/Login';
 const Stack = createNativeStackNavigator();
 
 export const MainStack = ({route}) => {
@@ -18,6 +19,7 @@ export const MainStack = ({route}) => {
     <NavigationContainer>
       <Stack.Navigator>
       <Stack.Screen name="Register" component={Register} />
+      <Stack.Screen name="Login" component={Login} />
         <Stack.Screen 
           name="Home"
           component={Home}

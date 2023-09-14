@@ -51,7 +51,7 @@ module.exports = {
       // Retrieve all users from the database
       const users = await UserModel.find();
 
-     res.status(200).json({
+      res.status(200).json({
         success: true,
         message: "Users retrieved successfully",
         users: users,
@@ -65,5 +65,17 @@ module.exports = {
       });
     }
   },
-  
+  loginUser: async (req, res) => {
+    try {
+      const {email,password} = req.body;
+      const validateEmail = await UserModel.find({email:email})
+      if(!validateEmail){
+        res.send({ status: "failed", message: "email and password does not match 🙁🙁😥" });
+      }else{
+        res.status(200).send({ status: "success", message: "LOGIN SUCCESSFULLY"});
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+  },
 };

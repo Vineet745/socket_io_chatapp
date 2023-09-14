@@ -9,7 +9,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Home = () => {
   const [filteredUser, setAllfilteredUser] = useState([]);
   const {Allusers} = useSelector(state=>state.user)
-  console.log("Alluser",Allusers)
   
   const dispatch = useDispatch()
 
@@ -32,11 +31,9 @@ const Home = () => {
     const token =   await AsyncStorage.getItem("ID")
     console.log(token)
       
-      const {data} = await axios.get('http://192.168.35.203:3000/api/alluser');
+      const {data} = await axios.get('http://localhost:3000/api/alluser');
       const filterData = data.users.filter((item)=>item._id !== token)
       setAllfilteredUser(filterData)
-      console.log(filterData,"Filtered Data")
-      console.log(data.users,"Original Array")
     } catch (error) {
       console.log('error', error);
     }

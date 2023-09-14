@@ -31,7 +31,7 @@ const Signup = props => {
 
   const handleRegister = async (data) => {
     try {
-     const response = await axios.post("http://192.168.35.203:3000/api/register",data)
+     const response = await axios.post("https://chat-application-vineet.onrender.com/api/register" ,data)
      await AsyncStorage.setItem("ID",response.data.user._id)
      dispatch(getUser(response.data.user))
      navigate('Home')
@@ -122,8 +122,11 @@ const Signup = props => {
           }}>
           <Text style={{color: 'white', fontSize: 16}}>Register</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={()=>navigate('Login')} style={{marginTop:15}}>
+          <Text style={{color:"blue",alignSelf:"center"}}>Login</Text>
+        </TouchableOpacity>
         <TouchableOpacity onPress={()=>navigate('Home')} style={{marginTop:15}}>
-          <Text style={{color:"blue",alignSelf:"center"}}>Go to home</Text>
+          <Text style={{color:"blue",alignSelf:"center"}}>Home</Text>
         </TouchableOpacity>
       </View>
     </Background>

@@ -35,38 +35,49 @@ db.once("open", () => {
 
 // Routes
 app.use("/api", authRoutes);
-app.get('/',(req,res)=>{
-  res.send("welcome to chat app")
-})
+
+
 // Socket Connection
 
-
-
-
 // Connection
-io.on("connection", function (socket) {
-  console.log("connected....");
 
-  socket.on('join', (roomId) => {
-    console.log("connnected to Room",roomId)
-    socket.join(roomId);
-  });
+let activeUsers = []
+
+io.on("connection",  (socket)=> {
+  console.log("connected....")
+
+// add new User
+socket.on('new-user-add',(newUserId)=>{
+  if(!activeUsers.some((user)=>user.userId === newUserId)){
+    activeUsers.push({
+      userId:newUserId,
+      socketId:socket.id
+    })
+    console.log("New user Connected",activeUsers)
+    
+  }
+io.emit('get-users',activeUsers)
+})
 
 
-  socket.on("send_message", (data) => {
-    const { text, receiverId } = data;
-    io.to(receiverId).emit("new_message", { text, receiverId });
-    console.log("emitable Text", text);
-  });
 
-  // Disconnect
-  socket.on("disconnect", function () {
-    console.log("A user disconnected");
-  });
+socket.on("disconnect",()=>{
+  activeUsers = activeUsers.filter((user)=>user.socketId !== socket.id)
+  console.log("User Disconnected")
+  io.emit('get-users',activeUsers)
+})
+
 
   
-
-  
+socket.on("send-message", (data) => {
+  const { receiverId } = data;
+  const user = activeUsers.find((user) => user.userId === receiverId);
+  console.log("Sending from socket to :", receiverId)
+  console.log("Data: ", data)
+  if (user) {
+    io.to(user.socketId).emit("recieve-message", data);
+  }
+});
 
 });
 
