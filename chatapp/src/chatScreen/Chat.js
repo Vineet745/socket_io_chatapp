@@ -7,9 +7,11 @@ import {useDispatch, useSelector} from 'react-redux';
 
 const Chat = ({route, roomId}) => {
   const [asyncId, setAsyncId] = useState('');
-  const [users, setUsers] = useState([]);
+  const [onlineUsers, setOnlineUsers] = useState([]);
   const [message, setMessage] = useState('');
-  // const {user} = useSelector(state=>state.user)
+  const [allmessages, setallmessages] = useState([])
+  const {user} = useSelector(state=>state.user)
+
   const {
     params: {item},
   } = route;
@@ -28,26 +30,19 @@ const Chat = ({route, roomId}) => {
     getToken();
     socket.emit('new-user-add', asyncId);
     socket.on('get-users', users => {
-      setUsers(users);
+      setOnlineUsers(users);
     });
+  }, [user]);
 
-    return () => {
-      if (socket) {
-        socket.disconnect();
-      }
-    };
+  useEffect(() => {
+    socket.on('new_message', msg => {
+      console.log('received Message', msg);
+      setallmessages([...allmessages,msg])
+    });
   }, []);
-
-  // useEffect(() => {
-  //   socket.on('new_message', msg => {
-  //     console.log('received Message', msg);
-  //     dispatch(addMessage(msg));
-  //   });
-  // }, []);
 
   const sendMessage = () => {
     const myMessage = {
-      senderId: asyncId,
       receiverId: item._id,
       text: message,
     };
@@ -57,46 +52,46 @@ const Chat = ({route, roomId}) => {
   };
 
   return (
-    <View></View>
-    // <View style={{ flex: 1 }}>
-    //   <View style={{ flex: 1 }}>
-    //     {messages.map((msg, index) => (
-    //       <View key={index}>
-    //         {msg.receiverId === item._id &&
-    //         (<View style={{ borderWidth: 1, borderRadius: 10,height:50,marginVertical:10,justifyContent:"center" ,paddingHorizontal:10,width:280}}>
-    //             <Text style={{color:"black",fontSize:18}}>{msg.text}</Text>
-    //           </View>
-    //         )}
-    //       </View>
-    //     ))}
-    //   </View>
-    //   <View
-    //     style={{
-    //       flexDirection: 'row',
-    //       alignItems: 'center',
-    //       justifyContent: 'space-between',
-    //       paddingHorizontal: 10,
-    //     }}>
-    //     <TextInput
-    //       style={{ borderWidth: 1, width: '80%' }}
-    //       value={message}
-    //       onChangeText={value => setMessage(value)}
-    //       placeholder="Type Message"
-    //     />
-    //     <TouchableOpacity
-    //       style={{
-    //         backgroundColor: 'lightblue',
-    //         width: 60,
-    //         height: 50,
-    //         alignItems: 'center',
-    //         justifyContent: 'center',
-    //         borderRadius: 10,
-    //       }}
-    //       onPress={sendMessage}>
-    //       <Text>Send</Text>
-    //     </TouchableOpacity>
-    //   </View>
-    // </View>
+    // <View></View>
+    <View style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
+        {allmessages.map((msg, index) => (
+          <View key={index}>
+            {msg.receiverId === item._id &&
+            (<View style={{ borderWidth: 1, borderRadius: 10,height:50,marginVertical:10,justifyContent:"center" ,paddingHorizontal:10,width:280}}>
+                <Text style={{color:"black",fontSize:18}}>{msg.text}</Text>
+              </View>
+            )}
+          </View>
+        ))}
+      </View>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          paddingHorizontal: 10,
+        }}>
+        <TextInput
+          style={{ borderWidth: 1, width: '80%' }}
+          value={message}
+          onChangeText={value => setMessage(value)}
+          placeholder="Type Message"
+        />
+        <TouchableOpacity
+          style={{
+            backgroundColor: 'lightblue',
+            width: 60,
+            height: 50,
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: 10,
+          }}
+          onPress={sendMessage}>
+          <Text>Send</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
   );
 };
 

@@ -31,7 +31,7 @@ const Home = () => {
     const token =   await AsyncStorage.getItem("ID")
     console.log(token)
       
-      const {data} = await axios.get('http://localhost:3000/api/alluser');
+      const {data} = await axios.get('https://chat-application-vineet.onrender.com/api/alluser');
       const filterData = data.users.filter((item)=>item._id !== token)
       setAllfilteredUser(filterData)
     } catch (error) {

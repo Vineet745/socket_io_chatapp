@@ -17,6 +17,7 @@ import registerstyle from '../register/registerstyle';
 
 
   const Login = props => {
+    const [asyncId, setasyncId] = useState('')
     const {
       control,
       handleSubmit,
@@ -25,6 +26,7 @@ import registerstyle from '../register/registerstyle';
     const dispatch = useDispatch();
     const {navigate} = useNavigation()
     // Handlers
+    
   
   
     // Register Handler
@@ -32,7 +34,7 @@ import registerstyle from '../register/registerstyle';
     const handleLogin = async (data) => {
       try {
        const response = await axios.post("https://chat-application-vineet.onrender.com/api/login",data)
-       await AsyncStorage.setItem("ID",response.data.user._id)
+       console.log("Response",response.data)
        dispatch(loginUser(response.data.user))
        navigate('Home')
       } catch (error) {
