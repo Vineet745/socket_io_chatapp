@@ -77,7 +77,7 @@ socket.on("send_message", (data) => {
   console.log("Sending from socket to :", receiverId)
   console.log("Data: ", data)
   if (user) {
-    io.to(user.receiverId).emit("receive-message", data);
+    io.to(user.receiverId).emit("new_message", data);
   }
 });
 
