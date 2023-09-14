@@ -11,6 +11,7 @@ const Chat = ({route, roomId}) => {
   const [message, setMessage] = useState('');
   const [allmessages, setallmessages] = useState([])
   const {user} = useSelector(state=>state.user)
+  let currentuser = user._id
 
   const {
     params: {item},
@@ -53,7 +54,7 @@ const Chat = ({route, roomId}) => {
 
   const sendMessage = () => {
     const myMessage = {
-      senderId : user._id,
+      senderId : currentuser,
       receiverId: item._id,
       text: message,
     };
