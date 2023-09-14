@@ -16,9 +16,9 @@ const Chat = ({route, roomId}) => {
     params: {item},
   } = route;
   const dispatch = useDispatch();
-  // const socket = io('http://192.168.35.203:3000');
+  const socket = io('http://192.168.35.203:3000');
 
-  const socket = io('https://chat-application-vineet.onrender.com');
+  // const socket = io('https://chat-application-vineet.onrender.com');
 
   useEffect(() => {
     getToken()
@@ -35,7 +35,7 @@ const Chat = ({route, roomId}) => {
   
 
   useEffect(() => {
-    socket.emit('new-user-add', asyncId);
+    socket.emit('new-user-add', user._id);
     socket.on('get-users', users => {
       setOnlineUsers(users);
     });
@@ -43,10 +43,18 @@ const Chat = ({route, roomId}) => {
   
 
   useEffect(() => {
-    socket.on('new_message', msg => {
+    console.log("hello");
+    const messageHandler = (msg) => {
       console.log('received Message', msg);
-      setallmessages([...allmessages,msg])
-    });
+      setallmessages((prevMessages) => [...prevMessages, msg]);
+    };
+  
+    socket.on('new_message', messageHandler);
+  
+    return () => {
+      // Clean up the event listener when the component unmounts.
+      socket.off('new_message', messageHandler);
+    };
   }, []);
 
   const sendMessage = () => {
@@ -66,11 +74,10 @@ const Chat = ({route, roomId}) => {
       <View style={{ flex: 1 }}>
         {allmessages.map((msg, index) => (
           <View key={index}>
-            {msg.receiverId === item._id &&
-            (<View style={{ borderWidth: 1, borderRadius: 10,height:50,marginVertical:10,justifyContent:"center" ,paddingHorizontal:10,width:280}}>
+            {/* {msg.receiverId === item._id && */}
+            <View style={{ borderWidth: 1, borderRadius: 10,height:50,marginVertical:10,justifyContent:"center" ,paddingHorizontal:10,width:280}}>
                 <Text style={{color:"black",fontSize:18}}>{msg.text}</Text>
               </View>
-            )}
           </View>
         ))}
       </View>
