@@ -57,25 +57,27 @@ socket.on('new-user-add',(newUserId)=>{
     console.log("New user Connected",activeUsers)
     
   }
-io.emit('get-users',activeUsers)
-})
-
-socket.on("disconnect",()=>{
-  activeUsers = activeUsers.filter((user)=>user.socketId !== socket.id)
-  console.log("User Disconnected")
   io.emit('get-users',activeUsers)
 })
 
+// socket.on("disconnect",()=>{
+//   activeUsers = activeUsers.filter((user)=>user.socketId !== socket.id)
+//   console.log("User Disconnected")
+//   io.emit('get-users',activeUsers)
+
+// })
+
 
   
-socket.on("send-message", (data) => {
+socket.on("send_message", (data) => {
   console.log("data",data)
   const { receiverId } = data;
-  const user = activeUsers.find((user) => user.userId === receiverId);
+  const user = activeUsers.find((user) =>user.userId === receiverId)
+  console.log("user",user)
   console.log("Sending from socket to :", receiverId)
   console.log("Data: ", data)
   if (user) {
-    io.to(user.socketId).emit("receive-message", data);
+    io.to(user.receiverId).emit("receive-message", data);
   }
 });
 

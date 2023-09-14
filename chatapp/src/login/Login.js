@@ -34,8 +34,9 @@ import registerstyle from '../register/registerstyle';
     const handleLogin = async (data) => {
       try {
        const response = await axios.post("https://chat-application-vineet.onrender.com/api/login",data)
-       console.log("Response",response.data)
-       dispatch(loginUser(response.data.user))
+       console.log("Response",response.data.validateEmail[0]._id)
+       await AsyncStorage.setItem("ID",response.data.validateEmail[0]._id)
+       dispatch(loginUser(response.data.validateEmail[0]))
        navigate('Home')
       } catch (error) {
         console.log(error);
