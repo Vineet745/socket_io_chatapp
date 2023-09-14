@@ -16,9 +16,9 @@ const Chat = ({route, roomId}) => {
     params: {item},
   } = route;
   const dispatch = useDispatch();
-  // const socket = io('http://192.168.35.203:3000');
+  const socket = io('http://192.168.35.203:3000');
 
-  const socket = io('https://chat-application-vineet.onrender.com');
+  // const socket = io('https://chat-application-vineet.onrender.com');
 
   useEffect(() => {
     getToken()
@@ -43,25 +43,17 @@ const Chat = ({route, roomId}) => {
 
 
   useEffect(() => {
-    console.log("hello");
-    const messageHandler = (msg) => {
-      console.log('received Message', msg);
-      setallmessages((prevMessages) => [...prevMessages, msg]);
-    };
-  
-    socket.on('new_message', messageHandler);
-  
-    return () => {
-      // Clean up the event listener when the component unmounts.
-      socket.off('new_message', messageHandler);
-    };
-  }, []);
+    socket.on('new_message',(data)=>{
+      console.log("new_message",data)
+      setallmessages([...allmessages,data])
+    })
+  }, [allmessages]);
 
 
 
   const sendMessage = () => {
     const myMessage = {
-      senderId : asyncId,
+      senderId : user._id,
       receiverId: item._id,
       text: message,
     };
