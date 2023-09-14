@@ -21,15 +21,15 @@ const Chat = ({route, roomId}) => {
 
   const socket = io('https://chat-application-vineet.onrender.com');
 
-  useEffect(() => {
-    getToken()
-  }, [])
+  // useEffect(() => {
+  //   getToken()
+  // }, [])
 
 
-  const getToken = async () => {
-    const AsyncId = await AsyncStorage.getItem('ID');
-    setAsyncId(AsyncId);
-  };
+  // const getToken = async () => {
+  //   const AsyncId = await AsyncStorage.getItem('ID');
+  //   setAsyncId(AsyncId);
+  // };
  
   
  
@@ -38,7 +38,7 @@ const Chat = ({route, roomId}) => {
     socket.on('get-users', users => {
       setOnlineUsers(users);
     });
-  }, [asyncId]);
+  }, [user]);
   
 
 
