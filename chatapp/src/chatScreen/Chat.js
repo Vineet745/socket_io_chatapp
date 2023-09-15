@@ -59,6 +59,10 @@ const Chat = ({route}) => {
     // setallmessages(prev => [...prev, myMessage]);
     setMessage('');
   };
+
+
+  const isMyMessage = (msg) => msg.senderId === currentuser;
+
   return (
     <View style={{ flex: 1 }}>
       <ScrollView contentContainerStyle={styles.messageContainer}>
