@@ -59,6 +59,7 @@ const Signup = props => {
               <TextInput
                 style={registerstyle.inputbox}
                 placeholder="Enter Your UserName"
+                placeholderTextColor={"black"}
                 value={field.value}
                 onChangeText={field.onChange}
               />
@@ -79,6 +80,7 @@ const Signup = props => {
               <TextInput
                 style={registerstyle.inputbox}
                 placeholder="Enter Your Email"
+                placeholderTextColor={"black"}
                 value={field.value}
                 onChangeText={field.onChange}
               />
@@ -100,6 +102,7 @@ const Signup = props => {
               <TextInput
                 style={registerstyle.inputbox}
                 placeholder="Enter Your Password"
+                placeholderTextColor={"black"}
                 value={field.value}
                 onChangeText={field.onChange}
               />

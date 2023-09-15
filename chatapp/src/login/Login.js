@@ -17,7 +17,6 @@ import registerstyle from '../register/registerstyle';
 
 
   const Login = props => {
-    const [asyncId, setasyncId] = useState('')
     const {
       control,
       handleSubmit,
@@ -63,6 +62,7 @@ import registerstyle from '../register/registerstyle';
                 <TextInput
                   style={registerstyle.inputbox}
                   placeholder="Enter Your Email"
+                  placeholderTextColor={"black"}
                   value={field.value}
                   onChangeText={field.onChange}
                 />
@@ -84,6 +84,7 @@ import registerstyle from '../register/registerstyle';
                 <TextInput
                   style={registerstyle.inputbox}
                   placeholder="Enter Your Password"
+                  placeholderTextColor={"black"}
                   value={field.value}
                   onChangeText={field.onChange}
                 />
