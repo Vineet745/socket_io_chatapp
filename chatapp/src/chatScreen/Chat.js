@@ -45,7 +45,7 @@ const Chat = ({route, roomId}) => {
   const sendMessage = () => {
     const myMessage = {
       senderId : currentuser,
-      receiverId: item.id,
+      receiverId: item._id,
       text: message,
     };
     socket.emit('send_message', myMessage);

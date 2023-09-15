@@ -58,7 +58,7 @@ const Home = () => {
               alignItems: 'center',
               marginVertical: 5,
             }}>
-            <Text style={{fontSize: 18}}>{item.username}</Text>
+            <Text style={{fontSize: 18,color:"black"}}>{item.username}</Text>
           </TouchableOpacity>
         )}
       />
