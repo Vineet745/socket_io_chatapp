@@ -24,7 +24,12 @@ const Chat = ({route}) => {
 
   const socket = io('https://chat-application-vineet.onrender.com');
 
-  
+  // useEffect(() => {
+  //   socket.emit('new-user-add', user._id);
+  //   socket.on('get-users', users => {
+  //     setOnlineUsers(users);
+  //   });
+  // }, []);
 
   useEffect(() => {
     socket.emit('new-user-add', roomId, user._id);
@@ -56,15 +61,13 @@ const Chat = ({route}) => {
   };
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ flex: 1 }}>
-        <ScrollView>
+      <ScrollView contentContainerStyle={styles.messageContainer}>
         {allmessages.map((msg, index) => (
-          <View key={index} style={msg.receiverId === user._id ? styles.leftMessage : styles.rightMessage}>
+          <View key={index} style={[styles.message, isMyMessage(msg) ? styles.rightMessage : styles.leftMessage]}>
             <Text style={{ color: 'black', fontSize: 18 }}>{msg.text}</Text>
           </View>
         ))}
-        </ScrollView>
-      </View>
+      </ScrollView>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -81,25 +84,25 @@ const Chat = ({route}) => {
 };
 
 const styles = {
-  leftMessage: {
+  messageContainer: {
+    flexGrow: 1,
+    justifyContent: 'flex-end', // To have the new messages at the bottom
+  },
+  message: {
     borderWidth: 1,
     borderRadius: 10,
-    height: 50,
-    marginVertical: 10,
+    marginVertical: 5,
     justifyContent: 'center',
     paddingHorizontal: 10,
-    width: 280,
+    maxWidth: '80%',
+  },
+  leftMessage: {
+    alignSelf: 'flex-start',
+    backgroundColor: '#e0e0e0',
   },
   rightMessage: {
-    borderWidth: 1,
-    borderRadius: 10,
-    height: 50,
-    marginVertical: 10,
-    justifyContent: 'center',
-    paddingHorizontal: 10,
-    width: 280,
-    position: 'absolute',
-    right: 0,
+    alignSelf: 'flex-end',
+    backgroundColor: 'lightblue',
   },
   inputContainer: {
     flexDirection: 'row',
@@ -109,7 +112,8 @@ const styles = {
   },
   input: {
     borderWidth: 1,
-    width: '80%',
+    flex: 1,
+    marginRight: 10,
   },
   sendButton: {
     backgroundColor: 'lightblue',
@@ -120,5 +124,6 @@ const styles = {
     borderRadius: 10,
   },
 };
+
 
 export default Chat;
