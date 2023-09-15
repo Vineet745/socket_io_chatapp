@@ -47,7 +47,7 @@ io.on("connection", (socket) => {
 
   
   const addUser = (roomId, socketId) => {
-    !activeUsers.some((user) => user.userId === roomId) &&
+    !activeUsers.some((user) => user.roomId === roomId) &&
     activeUsers.push({ roomId, socketId });
 };
 const getUser = (roomId) => {
