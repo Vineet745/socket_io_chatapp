@@ -17,9 +17,9 @@ const Chat = ({route, roomId}) => {
     params: {item},
   } = route;
   const dispatch = useDispatch();
-  // const socket = io('http://192.168.35.203:3000');
+  const socket = io('http://192.168.35.203:3000');
 
-  const socket = io('https://chat-application-vineet.onrender.com');
+  // const socket = io('https://chat-application-vineet.onrender.com');
 
   
  
@@ -35,8 +35,8 @@ const Chat = ({route, roomId}) => {
 
   useEffect(() => {
     socket.on('new_message',(data)=>{
-      console.log("new_message",data)
-      setallmessages([...allmessages,data.text])
+      console.log("new_message",data.text)
+      setallmessages(prev=>[...prev,data.text])
     })
   }, []);
 
@@ -45,7 +45,7 @@ const Chat = ({route, roomId}) => {
   const sendMessage = () => {
     const myMessage = {
       senderId : currentuser,
-      receiverId: item._id,
+      receiverId: item.id,
       text: message,
     };
     socket.emit('send_message', myMessage);
