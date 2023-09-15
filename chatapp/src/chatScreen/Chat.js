@@ -61,7 +61,7 @@ const Chat = ({route}) => {
   };
 
 
-  const isMyMessage = (msg) => msg.senderId === currentuser;
+const isMyMessage = (msg) => msg.senderId === currentuser;
 
   return (
     <View style={{ flex: 1 }}>
@@ -90,7 +90,7 @@ const Chat = ({route}) => {
 const styles = {
   messageContainer: {
     flexGrow: 1,
-    justifyContent: 'flex-end', // To have the new messages at the bottom
+    justifyContent: 'flex-start',
   },
   message: {
     borderWidth: 1,
@@ -102,22 +102,26 @@ const styles = {
   },
   leftMessage: {
     alignSelf: 'flex-start',
-    backgroundColor: '#e0e0e0',
+    backgroundColor: '#ffffff',
+    padding:10
   },
   rightMessage: {
     alignSelf: 'flex-end',
-    backgroundColor: 'lightblue',
+    backgroundColor: '#d5f0c0',
+    padding:10
   },
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 10,
+    marginbottom:10
   },
   input: {
     borderWidth: 1,
     flex: 1,
     marginRight: 10,
+    borderRadius:30
   },
   sendButton: {
     backgroundColor: 'lightblue',

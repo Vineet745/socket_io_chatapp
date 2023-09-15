@@ -4,6 +4,8 @@ import {
     ScrollView,
     TextInput,
     TouchableOpacity,
+    Modal,
+    ActivityIndicator,
   } from 'react-native';
   import React, {useEffect, useState} from 'react';
   import Background from '../Background';
@@ -17,6 +19,9 @@ import registerstyle from '../register/registerstyle';
 
 
   const Login = props => {
+
+    const [loading, setloading] = useState(false);
+
     const {
       control,
       handleSubmit,
@@ -32,14 +37,16 @@ import registerstyle from '../register/registerstyle';
   
     const handleLogin = async (data) => {
       try {
-        console.log(data)
+        setloading(true)
        const response = await axios.post("https://chat-application-vineet.onrender.com/api/login",data)
        console.log("Response",response.data.validateEmail[0]._id)
        await AsyncStorage.setItem("ID",response.data.validateEmail[0]._id)
        dispatch(loginUser(response.data.validateEmail[0]))
+       setloading(false)
        navigate('Home')
       } catch (error) {
         console.log(error);
+        setloading(false)
       }
     };
   
@@ -48,6 +55,15 @@ import registerstyle from '../register/registerstyle';
         <View style={registerstyle.registerView}>
           <Text style={registerstyle.outertext}>Login User</Text>
         </View>
+
+        <Modal visible={loading} transparent={true} animationType="none">
+        <View style={loginStyle.modalContainer}>
+          <ActivityIndicator size="large" color="lightgreen" />
+        </View>
+      </Modal>
+
+      
+
         <View style={registerstyle.container}>
           
           <Controller
