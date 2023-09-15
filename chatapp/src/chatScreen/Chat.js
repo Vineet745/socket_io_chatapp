@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, TextInput} from 'react-native';
+import {View, Text, TouchableOpacity, TextInput,ScrollView} from 'react-native';
 import io from 'socket.io-client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {addMessage, selectMessages} from '../redux/slice/chatSlice';
@@ -24,12 +24,7 @@ const Chat = ({route}) => {
 
   const socket = io('https://chat-application-vineet.onrender.com');
 
-  // useEffect(() => {
-  //   socket.emit('new-user-add', user._id);
-  //   socket.on('get-users', users => {
-  //     setOnlineUsers(users);
-  //   });
-  // }, []);
+  
 
   useEffect(() => {
     socket.emit('new-user-add', roomId, user._id);
@@ -56,17 +51,19 @@ const Chat = ({route}) => {
     };
     socket.emit('send_message', myMessage);
     console.log('mymessage', myMessage);
-    setallmessages(prev => [...prev, myMessage]);
+    // setallmessages(prev => [...prev, myMessage]);
     setMessage('');
   };
   return (
     <View style={{ flex: 1 }}>
       <View style={{ flex: 1 }}>
+        <ScrollView>
         {allmessages.map((msg, index) => (
           <View key={index} style={msg.receiverId === user._id ? styles.leftMessage : styles.rightMessage}>
             <Text style={{ color: 'black', fontSize: 18 }}>{msg.text}</Text>
           </View>
         ))}
+        </ScrollView>
       </View>
       <View style={styles.inputContainer}>
         <TextInput
