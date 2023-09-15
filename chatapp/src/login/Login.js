@@ -42,7 +42,6 @@ import registerstyle from '../register/registerstyle';
        console.log("Response",response.data.validateEmail[0]._id)
        await AsyncStorage.setItem("ID",response.data.validateEmail[0]._id)
        dispatch(loginUser(response.data.validateEmail[0]))
-       setloading(false)
        navigate('Home')
       } catch (error) {
         console.log(error);
@@ -52,18 +51,26 @@ import registerstyle from '../register/registerstyle';
   
     return (
       <Background>
-        <View style={registerstyle.registerView}>
-          <Text style={registerstyle.outertext}>Login User</Text>
-        </View>
 
-        <Modal visible={loading} transparent={true} animationType="none">
-        <View style={loginStyle.modalContainer}>
+
+<Modal visible={loading} transparent={true} animationType="none">
+        <View style={{height: 60,
+    width: 60,
+    justifyContent: 'center',
+    position: 'absolute',
+    top: 340,
+    left: 150,
+    alignItems: 'center',
+    backgroundColor: 'black',
+    borderRadius: 20,}}>
           <ActivityIndicator size="large" color="lightgreen" />
         </View>
       </Modal>
 
-      
 
+        <View style={registerstyle.registerView}>
+          <Text style={registerstyle.outertext}>Login User</Text>
+        </View>
         <View style={registerstyle.container}>
           
           <Controller

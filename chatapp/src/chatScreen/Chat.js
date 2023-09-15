@@ -78,6 +78,7 @@ const isMyMessage = (msg) => msg.senderId === currentuser;
           value={message}
           onChangeText={value => setMessage(value)}
           placeholder="Type Message"
+          placeholderTextColor={"black"}
         />
         <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
           <Text>Send</Text>
@@ -91,14 +92,15 @@ const styles = {
   messageContainer: {
     flexGrow: 1,
     justifyContent: 'flex-start',
+    paddingVertical:5,
+    backgroundColor:"#e7e1d9"
   },
   message: {
-    borderWidth: 1,
     borderRadius: 10,
     marginVertical: 5,
     justifyContent: 'center',
     paddingHorizontal: 10,
-    maxWidth: '80%',
+    minWidth: '30%',
   },
   leftMessage: {
     alignSelf: 'flex-start',
@@ -115,13 +117,14 @@ const styles = {
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingHorizontal: 10,
-    marginbottom:10
+    marginbottom:40
   },
   input: {
     borderWidth: 1,
     flex: 1,
     marginRight: 10,
-    borderRadius:30
+    borderRadius:30,
+    paddingHorizontal:20
   },
   sendButton: {
     backgroundColor: 'lightblue',
