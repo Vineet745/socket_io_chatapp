@@ -45,28 +45,35 @@ let activeUsers = [];
 io.on("connection", (socket) => {
   console.log("connected....");
 
-  // add new User
-  socket.on("new-user-add", (newUserId) => {
-    console.log("newUserId", newUserId);
-    if (!activeUsers.some((user) => user.userId === newUserId)) {
-      activeUsers.push({
-        userId: newUserId,
-        socketId: socket.id,
-      });
-      console.log("New user Connected", activeUsers);
-    }
-    io.emit("get-users", activeUsers);
-  });
+  
+  const addUser = (userId, socketId) => {
+    !activeUsers.some((user) => user.userId === userId) &&
+    activeUsers.push({ userId, socketId });
+};
+const getUser = (userId) => {
+    console.log("userId ", userId)
+    return activeUsers.find((user) => user.userId === userId);
+};
+
+socket.on("new-user-add", (userId) => {
+  try {
+      addUser(userId, socket.id);
+      console.log("users = ", activeUsers);
+      io.emit("getUsers", activeUsers);
+  } catch (error) {
+      console.error("Error in addUser:", error);
+      socket.emit("error", "An error occurred while adding user.");
+  }
+});
 
   socket.on("send_message", (data) => {
-    const { receiverId } = data;
-    const user = activeUsers.find((user) => user.userId === receiverId);
-    console.log("Sending from socket to :", receiverId);
-    console.log("Data: ", data);
-    if (user) {
-      io.to(user.socketId).emit("new_message", data);
-      console.log("data1", data);
+    const user = getUser(data.receiverId);
+    console.log(`Sending from socket to: ${data.receiverId}`);
+    if (!user) {
+      console.log("receiver not found");
+      return;
     }
+    socket.to(user.socketId).emit("new_message", data); 
   });
 });
 

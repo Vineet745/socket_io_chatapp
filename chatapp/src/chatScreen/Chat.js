@@ -22,7 +22,6 @@ const Chat = ({route, roomId}) => {
   const socket = io('https://chat-application-vineet.onrender.com');
 
   
-  
  
   useEffect(() => {
     socket.emit('new-user-add', user._id);
@@ -37,9 +36,9 @@ const Chat = ({route, roomId}) => {
   useEffect(() => {
     socket.on('new_message',(data)=>{
       console.log("new_message",data)
-      setallmessages([...allmessages,data])
+      setallmessages([...allmessages,data.text])
     })
-  }, [allmessages]);
+  }, []);
 
 
 
@@ -62,7 +61,7 @@ const Chat = ({route, roomId}) => {
           <View key={index}>
             {/* {msg.receiverId === item._id && */}
             <View style={{ borderWidth: 1, borderRadius: 10,height:50,marginVertical:10,justifyContent:"center" ,paddingHorizontal:10,width:280}}>
-                <Text style={{color:"black",fontSize:18}}>{msg.text}</Text>
+                <Text style={{color:"black",fontSize:18}}>{msg}</Text>
               </View>
           </View>
         ))}
