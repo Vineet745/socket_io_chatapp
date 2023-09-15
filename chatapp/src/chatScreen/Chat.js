@@ -104,6 +104,24 @@ const styles = {
     position: 'absolute',
     right: 0,
   },
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 10,
+  },
+  input: {
+    borderWidth: 1,
+    width: '80%',
+  },
+  sendButton: {
+    backgroundColor: 'lightblue',
+    width: 60,
+    height: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 10,
+  },
 };
 
 export default Chat;
