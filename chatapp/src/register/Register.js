@@ -4,6 +4,8 @@ import {
   ScrollView,
   TextInput,
   TouchableOpacity,
+  ActivityIndicator,
+  Modal,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import Background from '../Background';
@@ -12,36 +14,60 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import registerstyle from './registerstyle';
 import {useForm, Controller} from 'react-hook-form';
 import axios from 'axios';
-import { getUser } from '../redux/slice/userSlice';
-import { useNavigation } from '@react-navigation/native';
+import {getUser, registerUser} from '../redux/slice/userSlice';
+import {useNavigation} from '@react-navigation/native';
 const Signup = props => {
+  const [loading, setloading] = useState(false);
+  const {user} = useSelector(state => state.user);
   const {
     control,
     handleSubmit,
     formState: {errors},
   } = useForm();
-  const dispatch = useDispatch();
-  const {navigate} = useNavigation()
-  // Handlers
 
-  const {user} = useSelector((state)=>state.user)
-  console.log("Redux User",user)
+  const dispatch = useDispatch();
+  const {navigate} = useNavigation();
+  // Handlers
 
   // Register Handler
 
-  const handleRegister = async (data) => {
+  const handleRegister = async data => {
     try {
-     const response = await axios.post("https://chat-application-vineet.onrender.com/api/register" ,data)
-     await AsyncStorage.setItem("ID",response.data.user._id)
-     dispatch(getUser(response.data.user))
-     navigate('Home')
+      setloading(true);
+      const response = await axios.post(
+        'https://chat-application-vineet.onrender.com/api/register',
+        data,
+      );
+      const Id = response.data.user._id
+      await AsyncStorage.setItem('ID', Id);
+      dispatch(registerUser(Id));
+      navigate('Home');
     } catch (error) {
       console.log(error);
+    } finally {
+      setloading(false);
     }
   };
 
   return (
     <Background>
+      <Modal visible={loading} transparent={true} animationType="none">
+        <View
+          style={{
+            height: 60,
+            width: 60,
+            justifyContent: 'center',
+            position: 'absolute',
+            top: 340,
+            left: 150,
+            alignItems: 'center',
+            backgroundColor: 'black',
+            borderRadius: 20,
+          }}>
+          <ActivityIndicator size="large" color="lightgreen" />
+        </View>
+      </Modal>
+
       <View style={registerstyle.registerView}>
         <Text style={registerstyle.outertext}>Register User</Text>
       </View>
@@ -59,7 +85,7 @@ const Signup = props => {
               <TextInput
                 style={registerstyle.inputbox}
                 placeholder="Enter Your UserName"
-                placeholderTextColor={"black"}
+                placeholderTextColor={'black'}
                 value={field.value}
                 onChangeText={field.onChange}
               />
@@ -80,7 +106,7 @@ const Signup = props => {
               <TextInput
                 style={registerstyle.inputbox}
                 placeholder="Enter Your Email"
-                placeholderTextColor={"black"}
+                placeholderTextColor={'black'}
                 value={field.value}
                 onChangeText={field.onChange}
               />
@@ -102,7 +128,7 @@ const Signup = props => {
               <TextInput
                 style={registerstyle.inputbox}
                 placeholder="Enter Your Password"
-                placeholderTextColor={"black"}
+                placeholderTextColor={'black'}
                 value={field.value}
                 onChangeText={field.onChange}
               />
@@ -111,8 +137,9 @@ const Signup = props => {
           )}
         />
 
-        <TouchableOpacity activeOpacity={1}
-        onPress={handleSubmit(handleRegister)}
+        <TouchableOpacity
+          activeOpacity={1}
+          onPress={handleSubmit(handleRegister)}
           style={{
             backgroundColor: 'violet',
             marginTop: 20,
@@ -125,11 +152,15 @@ const Signup = props => {
           }}>
           <Text style={{color: 'white', fontSize: 16}}>Register</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={()=>navigate('Login')} style={{marginTop:15}}>
-          <Text style={{color:"blue",alignSelf:"center"}}>Login</Text>
+        <TouchableOpacity
+          onPress={() => navigate('Login')}
+          style={{marginTop: 15}}>
+          <Text style={{color: 'blue', alignSelf: 'center'}}>Login</Text>
         </TouchableOpacity>
-        <TouchableOpacity onPress={()=>navigate('Home')} style={{marginTop:15}}>
-          <Text style={{color:"blue",alignSelf:"center"}}>Home</Text>
+        <TouchableOpacity
+          onPress={() => navigate('Home')}
+          style={{marginTop: 15}}>
+          <Text style={{color: 'blue', alignSelf: 'center'}}>Home</Text>
         </TouchableOpacity>
       </View>
     </Background>

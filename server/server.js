@@ -2,10 +2,35 @@ const express = require("express");
 const mongoose = require("mongoose");
 const app = express();
 const server = require("http").createServer(app);
+const multer = require("multer");
 const io = require("socket.io")(server);
 const PORT = 3000;
 var bodyParser = require("body-parser");
 const authRoutes = require("./routes/authRoutes.js");
+
+
+// Multer
+
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, "uploads");
+    },
+    filename: function (req, file, cb) {
+      cb(null, file.fieldname + "-" + Date.now() + ".jpg");
+    },
+  }),
+}).single("user_file")
+
+
+
+app.post("/upload",upload,(req,res)=>{
+  res.send("file upload")
+})
+
+
+
+
 
 // create application/x-www-form-urlencoded parser
 app.use(bodyParser.json());
@@ -45,70 +70,40 @@ let activeUsers = [];
 io.on("connection", (socket) => {
   console.log("connected....");
 
-  
   const addUser = (roomId, socketId) => {
     !activeUsers.some((user) => user.roomId === roomId) &&
-    activeUsers.push({ roomId, socketId });
-};
-const getUser = (roomId) => {
-    console.log("userId ", roomId)
+      activeUsers.push({ roomId, socketId });
+  };
+  const getUser = (roomId) => {
+    console.log("userId ", roomId);
     return activeUsers.find((user) => user.roomId === roomId);
-};
+  };
 
-// socket.on("new-user-add", (userId) => {
-//   try {
-//     socket.join(userId)
-//     console.log(userId)
-//     addUser(userId, socket.id);
-//     console.log("users = ", activeUsers);
-//     io.emit("getUsers", activeUsers);
-//   } catch (error) {
-//     console.error("Error in addUser:", error);
-//       socket.emit("error", "An error occurred while adding user.");
-//   }
-// });
-
-
-socket.on("new-user-add", (roomId) => {
-  try {
-    socket.join(roomId)
-    console.log(roomId)
-    addUser(roomId,socket.id)
-    console.log("users = ", activeUsers);
-    io.emit("getUsers", activeUsers);
-  } catch (error) {
-    console.error("Error in addUser:", error);
+  socket.on("new-user-add", (roomId) => {
+    try {
+      socket.join(roomId);
+      console.log(roomId);
+      addUser(roomId, socket.id);
+      console.log("users = ", activeUsers);
+      io.emit("getUsers", activeUsers);
+    } catch (error) {
+      console.error("Error in addUser:", error);
       socket.emit("error", "An error occurred while adding user.");
-  }
-});
-
-
-
-//   socket.on("send_message", (data) => {
-//     const user = getUser(data.receiverId);
-//     console.log(`Sending from socket to: ${data.receiverId}`);
-//     if (!user) {
-//       console.log("receiver not found");
-//       return;
-//     }
-//     console.log(data.receiverId)
-//     socket.to(data.receiverId).emit("new_message", data); 
-//   });
-// });
-
-
-socket.on("send_message", (data) => {
-      const user = getUser(data.roomId);
-      console.log(`Sending from socket to: ${data.roomId}`);
-      if (!user) {
-        console.log("receiver not found");
-        return;
-      }
-      console.log(data.receiverId)
-      socket.to(user.roomId).emit("new_message", data); 
-    });
+    }
   });
 
+
+  socket.on("send_message", (data) => {
+    const user = getUser(data.roomId);
+    console.log(`Sending from socket to: ${data.roomId}`);
+    if (!user) {
+      console.log("receiver not found");
+      return;
+    }
+    console.log(data.receiverId);
+    socket.to(user.roomId).emit("new_message", data);
+  });
+});
 
 // User
 

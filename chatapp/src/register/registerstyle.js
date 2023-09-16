@@ -30,7 +30,8 @@ export default registerStyle = StyleSheet.create({
         margin:moderateScale(20),
         borderRadius:moderateScale(20),
         fontSize:moderateScale(20),
-        marginTop:verticalScale(8)
+        marginTop:verticalScale(8),
+        color:"black"
     },
     buttontouchable:{
             backgroundColor:"#8948f7",

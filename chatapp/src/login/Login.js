@@ -39,9 +39,9 @@ import registerstyle from '../register/registerstyle';
       try {
         setloading(true)
        const response = await axios.post("https://chat-application-vineet.onrender.com/api/login",data)
-       console.log("Response",response.data.validateEmail[0]._id)
-       await AsyncStorage.setItem("ID",response.data.validateEmail[0]._id)
-       dispatch(loginUser(response.data.validateEmail[0]))
+       const Id = response.data.validateEmail[0]._id
+       await AsyncStorage.setItem("ID",Id)
+       dispatch(loginUser(Id))
        navigate('Home')
       } catch (error) {
         console.log(error);
@@ -129,7 +129,7 @@ import registerstyle from '../register/registerstyle';
               height: 50,
               borderRadius: 10,
             }}>
-            <Text style={{color: 'white', fontSize: 16}}>Register</Text>
+            <Text style={{color: 'white', fontSize: 16}}>Login</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={()=>navigate('Register')} style={{marginTop:15}}>
             <Text style={{color:"blue",alignSelf:"center"}}>Not a user ? Register</Text>

@@ -4,18 +4,18 @@ import axios from 'axios';
 
 export const userSlice = createSlice({
   name: 'user',
-  initialState: {user: null, Allusers: [], isLoading: false, isError: false},
+  initialState: {userId: null, Allusers: [], isLoading: false, isError: false},
   reducers: {
-    getUser: (state, action) => {
-      state.user = action.payload;
+    registerUser: (state, action) => {
+      state.userId = action.payload;
     },
     loginUser: (state, action) => {
-      state.user = action.payload;
+      state.userId = action.payload;
     },
   },
 
   
 });
 
-export const {getUser,loginUser} = userSlice.actions;
+export const {registerUser,loginUser} = userSlice.actions;
 export default userSlice.reducer;
