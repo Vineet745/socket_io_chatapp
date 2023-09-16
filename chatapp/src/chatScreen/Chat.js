@@ -6,6 +6,8 @@ import {
   TextInput,
   ScrollView,
   Image,
+  Modal,
+  ActivityIndicator,
 } from 'react-native';
 import io from 'socket.io-client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -18,47 +20,68 @@ import {launchImageLibrary} from 'react-native-image-picker';
 
 const Chat = ({route}) => {
   // States and Imports
-
-  const [asyncId, setAsyncId] = useState('');
+  const [loading, setloading] = useState(false)
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [message, setMessage] = useState('');
   const [allmessages, setallmessages] = useState([]);
-  const [imagedata, setImagedata] = useState();
   const [imageUrl, setImageUrl] = useState('');
-  const [check, setCheck] = useState(false);
   const {userId} = useSelector(state => state.user);
   let currentuser = userId;
+  const { params: {item}} = route;
+  const roomId = item._id < currentuser ? item._id + currentuser : currentuser + item._id;
+  const isMyMessage = msg => msg.senderId === currentuser;
 
-  const {
-    params: {item},
-  } = route;
+  // const socket = io('http://192.168.35.203:3000');
 
-  const roomId =
-    item._id < currentuser ? item._id + currentuser : currentuser + item._id;
-  const socket = io('http://192.168.35.203:3000');
-
-  // const socket = io('https://chat-application-vineet.onrender.com');
+  const socket = io('https://chat-application-vineet.onrender.com');
 
   useEffect(() => {
     socket.emit('new-user-add', roomId, userId);
     socket.on('get-users', users => {
       setOnlineUsers(users);
     });
-  }, []);
-
-  useEffect(() => {
+    // Listen the message comes from the socket
     socket.on('new_message', data => {
       console.log('new_message', data);
       setallmessages(prev => [...prev, data]);
     });
   }, []);
 
- 
 
+  
+
+  // Image Picking and Uploading to the firebase
+
+  // Getting Image
+  const imagelibrary = async () => {
+    const result = await launchImageLibrary({mediaType: 'photo'});
+    console.log(result)
+    uploadImage(result)
+  };
+
+  // Uploading Image
+  const uploadImage = async (result) => {
+    setloading(true)
+    try {
+      const reference = storage().ref(result.assets[0].fileName);
+      const pathToFile = result.assets[0].uri;
+      await reference.putFile(pathToFile);
+      const url = await storage()
+        .ref(result.assets[0].fileName)
+        .getDownloadURL();
+         setImageUrl(url);
+         console.log(url)
+    } catch (error) {
+      console.log('error', error);
+    }finally{
+      setloading(false)
+    }
+  };
+
+// Sending Message to the socket
 
   const sendMessage = () => {
     if (imageUrl) {
-      // Send image message
       const myImageMessage = {
         senderId: currentuser,
         receiverId: item._id,
@@ -86,31 +109,26 @@ const Chat = ({route}) => {
 
   // Image Library
 
-  const imagelibrary = async () => {
-    const result = await launchImageLibrary({mediaType: 'photo'});
-    uploadImage(result)
-    console.log(result);
-  };
-
-  const uploadImage = async (result) => {
-    console.log(result,"resu;t")
-    try {
-      const reference = storage().ref(result.assets[0].fileName);
-      const pathToFile = result.assets[0].uri;
-      await reference.putFile(pathToFile);
-      const url = await storage()
-        .ref(result.assets[0].fileName)
-        .getDownloadURL();
-        console.log(url)
-         setImageUrl(url);
-    } catch (error) {
-      console.log('error', error);
-    }
-  };
-  const isMyMessage = msg => msg.senderId === currentuser;
+  
 
   return (
     <View style={{flex: 1}}>
+      <Modal visible={loading} transparent={true} animationType="none">
+        <View
+          style={{
+            height: 60,
+            width: 60,
+            justifyContent: 'center',
+            position: 'absolute',
+            top: 340,
+            left: 150,
+            alignItems: 'center',
+            backgroundColor: 'black',
+            borderRadius: 20,
+          }}>
+          <ActivityIndicator size="large" color="lightgreen"/>
+        </View>
+      </Modal>
       <View style={{flex: 1}}>
         <ScrollView contentContainerStyle={styles.messageContainer}>
           {allmessages.map((msg, index) => (
